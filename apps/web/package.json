@@ -1,0 +1,46 @@
+{
+  "name": "@aihome/web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@aihome/domain": "*",
+    "@aihome/ui": "*",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@react-three/csg": "^4.0.0",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@tanstack/react-query": "^5.29.0",
+    "axios": "^1.6.8",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.370.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router": "^7.0.0",
+    "react-to-print": "^3.3.0",
+    "tailwind-merge": "^2.2.2",
+    "three": "^0.186.1",
+    "zod": "^3.23.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.4.19",
+    "oxlint": "^1.81.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  WorkspaceMember[]
+  projects Project[]
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships WorkspaceMember[]
+}
+
+model WorkspaceMember {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  workspaceId String
+  userId      String
+  role        String   // 'OWNER', 'ADMIN', 'MEMBER'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([workspaceId, userId])
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  workspaceId String
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  versions  DesignVersion[]
+  reviews   ClientReview[]
+}
+
+model DesignVersion {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId String
+  version   Int
+  designData Json     // Canonical HouseDesign JSON snapshot
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
+  reviews ClientReview[]
+
+  @@unique([projectId, version])
+}
+
+model ClientReview {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  projectId       String
+  designVersionId String
+  status          String   @default("OPEN") // 'OPEN', 'APPROVED', 'CHANGES_REQUESTED', 'CLOSED'
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime?
+  closedAt        DateTime?
+
+  project         Project       @relation(fields: [projectId], references: [id])
+  designVersion   DesignVersion @relation(fields: [designVersionId], references: [id])
+  shareLinks      ShareLink[]
+}
+
+model ShareLink {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  clientReviewId String
+  tokenHash      String   // Hashed token, raw token never stored
+  scopes         String[] // e.g. ['READ_VERSION', 'COMMENT']
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime?
+  revokedAt      DateTime?
+  lastUsedAt     DateTime?
+
+  clientReview   ClientReview @relation(fields: [clientReviewId], references: [id])
+}

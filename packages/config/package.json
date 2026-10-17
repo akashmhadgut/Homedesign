@@ -1,0 +1,10 @@
+{
+  "name": "@aihome/config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "peerDependencies": {
+    "typescript": "^5.0.0",
+    "eslint": "^9.0.0"
+  }
+}
